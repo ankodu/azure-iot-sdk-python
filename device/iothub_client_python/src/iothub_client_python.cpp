@@ -840,6 +840,7 @@ ReceiveMessageCallback(
     return boost::python::extract<IOTHUBMESSAGE_DISPOSITION_RESULT>(returnObject);
 }
 
+#ifndef DONT_USE_UPLOADTOBLOB
 typedef struct
 {
     boost::python::object deviceTwinCallback;
@@ -1001,6 +1002,7 @@ BlobUploadConfirmationCallback(
     }
     delete blobUploadContext;
 }
+#endif
 
 class IoTHubClient
 {
@@ -1011,9 +1013,11 @@ class IoTHubClient
         IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = NULL;
         switch (_protocol)
         {
+#if 0
         case HTTP:
             protocol = HTTP_Protocol;
             break;
+#endif
         case AMQP:
             protocol = AMQP_Protocol;
             break;
@@ -1363,6 +1367,7 @@ public:
         }
     }
 
+#ifndef DONT_USE_UPLOADTOBLOB
     void UploadToBlobAsync(
         std::string destinationFileName,
         std::string source,
@@ -1391,6 +1396,8 @@ public:
             throw IoTHubClientError(__func__, result);
         }
     }
+#endif
+
 #ifdef SUPPORT___STR__
     std::string str() const
     {
@@ -1577,7 +1584,9 @@ BOOST_PYTHON_MODULE(IMPORT_NAME)
         .def("set_option", &IoTHubClient::SetOption)
         .def("get_send_status", &IoTHubClient::GetSendStatus)
         .def("get_last_message_receive_time", &IoTHubClient::GetLastMessageReceiveTime)
+#ifndef DONT_USE_UPLOADTOBLOB
         .def("upload_blob_async", &IoTHubClient::UploadToBlobAsync)
+#endif
         // attributes
         .def_readonly("protocol", &IoTHubClient::protocol)
         // Python helpers

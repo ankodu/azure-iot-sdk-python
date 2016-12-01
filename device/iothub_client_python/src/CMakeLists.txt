@@ -28,36 +28,54 @@ IF(WIN32)
     SET_TARGET_PROPERTIES(iothub_client_python PROPERTIES SUFFIX ".pyd")
 ENDIF(WIN32)
 
-if(${use_wsio})
-    target_link_libraries(
-        iothub_client_python
-        iothub_client_http_transport
-        iothub_client_amqp_transport
-        iothub_client_amqp_ws_transport
-        iothub_client_mqtt_transport
-        iothub_client_mqtt_ws_transport
-        iothub_client
-        uamqp
-        ${Boost_LIBRARIES}
-        ${PYTHON_LIBRARIES}
-    )
-else()
-    target_link_libraries(
-        iothub_client_python
-        iothub_client_http_transport
-        iothub_client_amqp_transport
-        iothub_client_mqtt_transport
-        iothub_client
-        uamqp
-        ${Boost_LIBRARIES}
-        ${PYTHON_LIBRARIES}
-    )
+target_link_libraries(  
+    iothub_client_python
+    iothub_client 
+)
+
+if(${use_mqtt})
+	target_link_libraries(  
+		iothub_client_python
+		iothub_client_mqtt_transport
+	)
+    if(${use_wsio})
+	    target_link_libraries(  
+		    iothub_client_python
+		    iothub_client_mqtt_ws_transport
+	    )
+    endif()
 endif()
+if(${use_amqp})
+	target_link_libraries(  
+		iothub_client_python
+		iothub_client_amqp_transport
+	)
+    if(${use_wsio})
+	    target_link_libraries(  
+		    iothub_client_python
+		    iothub_client_amqp_ws_transport
+	    )
+    endif()
+	linkUAMQP(iothub_client_python)
+endif()
+if(${use_http})
+	target_link_libraries(  
+		iothub_client_python
+		iothub_client_http_transport
+	)
+endif()
+
+target_link_libraries(  
+	iothub_client_python
+	/mnt/d/repos/Python-2.7.1/install/lib/libpython2.7.a
+	/mnt/d/repos/boost_1_62_0/bin.v2/libs/python/build/gcc-4.7/release/link-static/threading-multi/libboost_python.a
+    ${PYTHON_LIBRARIES}
+)
 
 if(${use_wsio} AND WIN32)
     file(COPY $ENV{OpenSSLDir}/bin/libeay32.dll DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../../samples)
     file(COPY $ENV{OpenSSLDir}/bin/ssleay32.dll DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../../samples)
 endif()
 
+
 linkSharedUtil(iothub_client_python)
-linkUAMQP(iothub_client_python)
