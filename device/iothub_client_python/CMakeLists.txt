@@ -24,7 +24,7 @@ if(WIN32)
 else()
     # older boost-python libs didn't support versions
     if (${build_python} STREQUAL "2.7")
-        find_package(Boost COMPONENTS python REQUIRED)
+#        find_package(Boost COMPONENTS python REQUIRED)
     else()
         # Remove the period from python version for boost component
         string(REPLACE "." "" boost_python ${build_python})
