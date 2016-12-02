@@ -840,7 +840,6 @@ ReceiveMessageCallback(
     return boost::python::extract<IOTHUBMESSAGE_DISPOSITION_RESULT>(returnObject);
 }
 
-#ifndef DONT_USE_UPLOADTOBLOB
 typedef struct
 {
     boost::python::object deviceTwinCallback;
@@ -972,6 +971,7 @@ DeviceMethodCallback(
     return retVal;
 }
 
+#ifndef DONT_USE_UPLOADTOBLOB
 typedef struct
 {
     boost::python::object blobUploadCallback;
