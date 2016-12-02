@@ -67,8 +67,8 @@ endif()
 
 target_link_libraries(  
 	iothub_client_python
-	/mnt/d/repos/Python-2.7.1/install/lib/libpython2.7.a
-	/mnt/d/repos/boost_1_62_0/bin.v2/libs/python/build/gcc-4.7/release/link-static/threading-multi/libboost_python.a
+        python2.7
+	boost_python
     ${PYTHON_LIBRARIES}
 )
 
